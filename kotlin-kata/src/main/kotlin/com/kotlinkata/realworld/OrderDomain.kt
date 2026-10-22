@@ -34,7 +34,7 @@ import java.util.UUID
 }
 
 @JvmInline value class ProductId(val value: String) {
-    init { require(value.matches(Regex("[A-Z0-9]{4,20}(-[A-Z0-9]+)*"))) { "Invalid ProductId: $value" } }
+    init { require(value.matches(Regex("[A-Z0-9]{2,20}(-[A-Z0-9]+)*"))) { "Invalid ProductId: $value" } }
     override fun toString(): String = value
 }
 

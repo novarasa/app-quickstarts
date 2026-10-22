@@ -80,7 +80,7 @@ fun jobHierarchyExamples() = runBlocking {
  */
 suspend fun processOrderBatch(batchId: String, orders: List<String>) {
     for ((index, orderId) in orders.withIndex()) {
-        ensureActive()  // throws CancellationException if coroutine is cancelled
+        currentCoroutineContext().ensureActive()  // throws CancellationException if coroutine is cancelled
         // Without this, a tight loop would ignore cancellation!
 
         delay(50)  // delay() also checks for cancellation
@@ -187,11 +187,14 @@ suspend fun loadOrderWithAllDetails(orderId: String): String {
 
 // supervisorScope: independent tasks
 suspend fun sendNotifications(orderId: String) {
+    // Children of a supervisor must handle their own failures, otherwise they
+    // reach the thread's uncaught-exception handler.
+    val logFailure = CoroutineExceptionHandler { _, e -> println("  Notification failed: ${e.message}") }
     supervisorScope {
         launch {
             println("  Email sent for $orderId")
         }
-        launch {
+        launch(logFailure) {
             // This fails but doesn't cancel the sibling (email)
             throw RuntimeException("SMS gateway down!")
         }
@@ -242,30 +245,35 @@ fun coroutineScopeVsSupervisorExamples() = runBlocking {
 fun exceptionHandlingExamples() = runBlocking {
     println("=== Exception Handling ===")
 
-    // Exception in async — caught on await()
-    val deferred = async {
-        delay(50)
-        throw RuntimeException("Payment service unavailable")
-        "This is never returned"
-    }
+    // Under a plain parent, a failing child cancels the parent even if you catch
+    // the await(), and a CoroutineExceptionHandler is only honoured on root
+    // coroutines. supervisorScope makes its direct children behave like roots.
+    supervisorScope {
+        // Exception in async — caught on await()
+        val deferred = async {
+            delay(50)
+            throw RuntimeException("Payment service unavailable")
+            "This is never returned"
+        }
 
-    try {
-        val result = deferred.await()
-        println("Result: $result")
-    } catch (e: RuntimeException) {
-        println("Caught from async: ${e.message}")
-    }
+        try {
+            val result = deferred.await()
+            println("Result: $result")
+        } catch (e: RuntimeException) {
+            println("Caught from async: ${e.message}")
+        }
 
-    // CoroutineExceptionHandler — for uncaught exceptions in launch
-    val handler = CoroutineExceptionHandler { ctx, exception ->
-        println("Unhandled exception in ${ctx[CoroutineName]?.name}: ${exception.message}")
-    }
+        // CoroutineExceptionHandler — for uncaught exceptions in launch
+        val handler = CoroutineExceptionHandler { ctx, exception ->
+            println("Unhandled exception in ${ctx[CoroutineName]?.name}: ${exception.message}")
+        }
 
-    val job = launch(handler + CoroutineName("background-processor")) {
-        delay(50)
-        throw RuntimeException("Background processing failed")
+        val job = launch(handler + CoroutineName("background-processor")) {
+            delay(50)
+            throw RuntimeException("Background processing failed")
+        }
+        job.join()
     }
-    job.join()
 
     // try/catch inside launch — preferred for known error cases
     launch {

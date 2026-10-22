@@ -2,6 +2,12 @@
 
 A hands-on kata repository for **Principal Java Engineers** learning Kotlin. Every example is grounded in real production scenarios using an e-commerce order management domain.
 
+> **Humans:** start at [Getting Started](#getting-started), then follow the [Learning Path](#learning-path).
+>
+> **AI agents:** verify changes with `./gradlew compileTestKotlin` and by running the `main()` of any concept
+> file you touch. Exercises in `src/test` are deliberately `TODO()`; leave them unsolved unless asked.
+> Versions live in `gradle/libs.versions.toml`. Repo-wide guidance: [../README.md](../README.md#-for-ai-agents).
+
 ## Philosophy
 
 - **Real-world first**: Examples use a consistent e-commerce domain (orders, payments, products)
@@ -33,8 +39,22 @@ src/
 ## Getting Started
 
 ### Prerequisites
-- JDK 21+
-- IntelliJ IDEA (recommended) **or** Gradle 8.5+ on PATH
+- JDK 25 (current LTS) — or any JDK 17+ to run Gradle, which then auto-provisions JDK 25 via the Foojay toolchain resolver
+- IntelliJ IDEA (recommended), or just the bundled Gradle wrapper — no global Gradle install needed
+
+### Toolchain
+
+| Tool / library | Version |
+|---|---|
+| Kotlin (JVM plugin) | 2.4.21 |
+| JDK toolchain | 25 |
+| Gradle (wrapper) | 9.8.2 |
+| kotlinx-coroutines | 1.11.0 |
+| JUnit (Jupiter) | 6.1.3 |
+| AssertJ | 3.27.7 |
+| MockK | 1.14.11 |
+
+All versions live in [`gradle/libs.versions.toml`](gradle/libs.versions.toml) — bump them there.
 
 ### Setup
 
@@ -44,10 +64,13 @@ src/
 
 # Option 2: Command line
 cd kotlin-kata
-gradle wrapper           # downloads the wrapper jar
-./gradlew test           # run all exercises
+./gradlew compileTestKotlin                       # check everything compiles
+./gradlew test                                    # run all exercises
 ./gradlew test --tests "com.kotlinkata.basics.*"  # run one module
 ```
+
+> Fresh checkout: every exercise starts as `TODO()`, so `./gradlew test` reports
+> ~47 failures with `NotImplementedError`. That's expected — make them green one by one.
 
 ## Learning Path
 

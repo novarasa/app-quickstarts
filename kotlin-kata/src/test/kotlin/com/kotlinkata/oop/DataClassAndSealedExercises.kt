@@ -23,9 +23,9 @@ class DataClassAndSealedExercises {
         val p3 = Product("SKU-2", 9.99, true)
 
         // TODO: Fill in the expected values
-        assertThat(p1 == p2).isEqualTo(TODO<Boolean>())   // same values
-        assertThat(p1 == p3).isEqualTo(TODO<Boolean>())   // different sku
-        assertThat(p1 === p2).isEqualTo(TODO<Boolean>())  // reference equality
+        assertThat(p1 == p2).isEqualTo(TODO("true or false?"))   // same values
+        assertThat(p1 == p3).isEqualTo(TODO("true or false?"))   // different sku
+        assertThat(p1 === p2).isEqualTo(TODO("true or false?"))  // reference equality
     }
 
     @Test
@@ -75,15 +75,15 @@ class DataClassAndSealedExercises {
     // Exercise 2: Sealed Classes
     // ─────────────────────────────────────────────────────────────────────────
 
+    sealed class PaymentResult {
+        data class Approved(val transactionId: String, val amount: Double) : PaymentResult()
+        data class Declined(val code: Int, val reason: String) : PaymentResult()
+        data class Pending(val referenceId: String) : PaymentResult()
+        object Cancelled : PaymentResult()
+    }
+
     @Test
     fun `handle all states of a sealed class`() {
-        sealed class PaymentResult {
-            data class Approved(val transactionId: String, val amount: Double) : PaymentResult()
-            data class Declined(val code: Int, val reason: String) : PaymentResult()
-            data class Pending(val referenceId: String) : PaymentResult()
-            object Cancelled : PaymentResult()
-        }
-
         // TODO: Implement describe() to return a human-readable string for each state
         // Use a when expression — it MUST be exhaustive (no else needed!)
         fun describe(result: PaymentResult): String = TODO()
@@ -91,16 +91,16 @@ class DataClassAndSealedExercises {
         assertThat(describe(PaymentResult.Approved("TXN-001", 99.99))).contains("TXN-001")
         assertThat(describe(PaymentResult.Declined(4001, "Insufficient funds"))).contains("4001")
         assertThat(describe(PaymentResult.Pending("REF-001"))).contains("REF-001")
-        assertThat(describe(PaymentResult.Cancelled)).contains("cancel", ignoreCase = true)
+        assertThat(describe(PaymentResult.Cancelled)).containsIgnoringCase("cancel")
+    }
+
+    sealed class ParseResult<out T> {
+        data class Success<T>(val value: T) : ParseResult<T>()
+        data class Error(val message: String) : ParseResult<Nothing>()
     }
 
     @Test
     fun `use sealed class for error handling instead of exceptions`() {
-        sealed class ParseResult<out T> {
-            data class Success<T>(val value: T) : ParseResult<T>()
-            data class Error(val message: String) : ParseResult<Nothing>()
-        }
-
         // TODO: Implement parseOrderId that returns ParseResult.Success or ParseResult.Error
         // Valid order IDs match pattern: ORD-[0-9]{6}
         fun parseOrderId(input: String): ParseResult<String> = TODO()
@@ -118,14 +118,14 @@ class DataClassAndSealedExercises {
         }
     }
 
+    sealed class TrafficLight {
+        object Red : TrafficLight()
+        object Yellow : TrafficLight()
+        object Green : TrafficLight()
+    }
+
     @Test
     fun `implement state machine with sealed classes`() {
-        sealed class TrafficLight {
-            object Red : TrafficLight()
-            object Yellow : TrafficLight()
-            object Green : TrafficLight()
-        }
-
         // TODO: Implement nextState() — Red → Green → Yellow → Red
         fun nextState(current: TrafficLight): TrafficLight = TODO()
 

@@ -41,11 +41,9 @@ class CoroutinesExercises {
 
         // TODO: Fetch data for IDs 1 and 2 CONCURRENTLY using async/await
         // Store results in result1 and result2
-        val result1: String
-        val result2: String
         // TODO: Start both fetches concurrently, then await both
-        result1 = TODO()
-        result2 = TODO()
+        val result1: String = TODO()
+        val result2: String = TODO()
 
         assertThat(result1).isEqualTo("data-1")
         assertThat(result2).isEqualTo("data-2")

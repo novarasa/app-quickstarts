@@ -212,7 +212,7 @@ inline fun <reified T> createEmptyList(): List<T> = emptyList<T>()
 
 // Real-world: type-safe event bus
 class EventBus {
-    private val handlers = mutableMapOf<String, MutableList<(Any) -> Unit>>()
+    @PublishedApi internal val handlers = mutableMapOf<String, MutableList<(Any) -> Unit>>()
 
     inline fun <reified T> subscribe(noinline handler: (T) -> Unit) {
         val typeName = T::class.qualifiedName ?: error("Cannot subscribe to anonymous type")

@@ -102,13 +102,13 @@ class VariablesAndNullSafetyExercises {
     // Exercise 3: Smart Casts
     // ─────────────────────────────────────────────────────────────────────────
 
+    sealed interface Event
+    data class OrderEvent(val orderId: String) : Event
+    data class PaymentEvent(val amount: Double) : Event
+    data class ErrorEvent(val message: String) : Event
+
     @Test
     fun `process different event types with smart casts`() {
-        sealed interface Event
-        data class OrderEvent(val orderId: String) : Event
-        data class PaymentEvent(val amount: Double) : Event
-        data class ErrorEvent(val message: String) : Event
-
         // TODO: Implement a function that returns a description of each event
         // Use when with smart casts — no explicit casts needed!
         fun describe(event: Event): String = TODO()

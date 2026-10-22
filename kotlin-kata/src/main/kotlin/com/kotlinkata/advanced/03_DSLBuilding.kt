@@ -173,7 +173,7 @@ fun queryDslExamples() {
         where {
             "status" inList listOf("SHIPPED", "DELIVERED")
             "total" gte 50.0
-            "created_at" gt "2024-01-01"
+            "item_count" gt 2
         }
         orderBy("total", "DESC")
         limit(50)

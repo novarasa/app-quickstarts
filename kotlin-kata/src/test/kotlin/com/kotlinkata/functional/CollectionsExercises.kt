@@ -118,7 +118,8 @@ class CollectionsExercises {
         val activeStatuses = setOf("PENDING", "SHIPPED", "CONFIRMED")
 
         // TODO: Partition into (active, inactive) using partition()
-        val (active, inactive): Pair<List<Order>, List<Order>> = TODO()
+        val partitioned: Pair<List<Order>, List<Order>> = TODO()
+        val (active, inactive) = partitioned
 
         assertThat(active.map { it.id }).containsExactlyInAnyOrder("ORD-002", "ORD-004")
         assertThat(inactive.map { it.id }).containsExactlyInAnyOrder("ORD-001", "ORD-003", "ORD-005")

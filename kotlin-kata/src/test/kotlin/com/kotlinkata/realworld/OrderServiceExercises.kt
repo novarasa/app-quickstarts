@@ -47,7 +47,7 @@ class OrderServiceExercises {
     }
 
     @Test
-    fun `Order.create validates input`() {
+    fun `Order create validates input`() {
         val address = SampleData.standardAddress
 
         // TODO: Test that Order.create fails when items list is empty
@@ -90,11 +90,11 @@ class OrderServiceExercises {
 
         // TODO: Submit the order and verify status
         val submitted = service.submitOrder(order.id).getOrThrow()
-        assertThat(submitted.status).isInstanceOf(TODO<Class<*>>())
+        assertThat(submitted.status).isInstanceOf(TODO("the expected status class, e.g. SomeStatus::class.java"))
 
         // TODO: Confirm the order
         val confirmed = service.confirmOrder(submitted.id, "2024-02-15", "CONF-001").getOrThrow()
-        assertThat(confirmed.status).isInstanceOf(TODO<Class<*>>())
+        assertThat(confirmed.status).isInstanceOf(TODO("the expected status class, e.g. SomeStatus::class.java"))
 
         // TODO: Ship the order
         val shipped = service.shipOrder(
@@ -103,7 +103,7 @@ class OrderServiceExercises {
             "UPS",
             "2024-02-16"
         ).getOrThrow()
-        assertThat(shipped.status).isInstanceOf(TODO<Class<*>>())
+        assertThat(shipped.status).isInstanceOf(TODO("the expected status class, e.g. SomeStatus::class.java"))
 
         // Verify the shipped status has tracking info
         val shippedStatus = shipped.status as OrderStatus.Shipped
@@ -167,7 +167,7 @@ class OrderServiceExercises {
         //   3. Extract the confirmation ref from the status
         val confirmationRef: OrderResult<String> = order
             .submit()
-            .map { TODO() }   // confirm step
+            .map<Order> { TODO() }   // confirm step
             .map { confirmed ->
                 val status = confirmed.status as? OrderStatus.Confirmed
                     ?: error("Expected Confirmed status")

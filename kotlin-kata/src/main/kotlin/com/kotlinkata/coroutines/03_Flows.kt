@@ -2,6 +2,7 @@ package com.kotlinkata.coroutines
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.channels.awaitClose
 
 /**
  * # Kata 20: Flows — Reactive Streams the Kotlin Way
